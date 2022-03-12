@@ -90,7 +90,9 @@ void gameprogress(baseenemy* enemy[Pnum]) {
 
 			resultstate(j, enemy); //結果表示
 
-			enemy[j]->one_state(); //状態戻す
+			if (enemy[j]->get_state() != 0) {
+				enemy[j]->one_state(); 
+			}//状態戻す
 
 			if (enemy[j]->get_sayfinger() == sumfinger) {
 				enemy[j]->calc_hand();
@@ -144,7 +146,7 @@ int main()
 
 	baseenemy* enemy[] = {&p1, &p2, &p3, &p4, &p5}; 
 
-	std::cout << "gaemstart\n";
+	std::cout << "gamestart\n";
 
 	for (int i = 0;i < GamePlayNum;i++) {
 		gameprogress(enemy);
