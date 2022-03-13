@@ -68,58 +68,59 @@ void gameprogress(baseenemy* enemy[Pnum]) {
 	while (1) {
 		if (playernum == 1)break;
 		for (int j = 0;j < Pnum;j++) {
-			sumhand = 0;
-			sumfinger = 0;
-
 			if (enemy[j]->get_state() != 0) {
-				enemy[j]->two_state();
-			}//予想状態へ
+				sumhand = 0;
+				sumfinger = 0;
 
-			placestate(enemy);//状態表示
+				if (enemy[j]->get_state() != 0) {
+					enemy[j]->two_state();
+				}//予想状態へ
 
-			for (int i = 0;i < Pnum;i++) {
-				if (enemy[i]->get_state() == 0) {}
-				else if (enemy[i]->get_state() == 1) {
-					sumhand += enemy[i]->get_hand();
-					enemy[i]->dec_efinger();
-					sumfinger += enemy[i]->get_finger();
-				}
-			}//生存プレイヤの上げる指を決定
+				placestate(enemy);//状態表示
 
-			enemy[j]->dec_sayfinger(sumhand); //予想決定
-
-			resultstate(j, enemy); //結果表示
-
-			if (enemy[j]->get_state() != 0) {
-				enemy[j]->one_state(); 
-			}//状態戻す
-
-			if (enemy[j]->get_sayfinger() == sumfinger) {
-				enemy[j]->calc_hand();
-			}
-			else {
-				for (int k = 0;k < Pnum;k++)
-					if (enemy[k]->get_hand() != 0) {
-						enemy[k]->pluscalcetable();
-					}
-			}//状態の更新
-
-			enemy[j]->calctable(sumhand, sumfinger);//状態の更新
-
-			if (enemy[j]->get_hand() == 0 && enemy[j]->get_rank() == 100) {
-				enemy[j]->victory();
-				enemy[j]->dec_rank(rank);
-				rank++;
-				playernum -= 1;
-			}//状態の更新
-
-			if (playernum == 1) {
 				for (int i = 0;i < Pnum;i++) {
-					if (enemy[i]->get_rank() == 100)
-						enemy[i]->dec_rank(rank);
+					if (enemy[i]->get_state() == 1) {
+						sumhand += enemy[i]->get_hand();
+						enemy[i]->dec_efinger();
+						sumfinger += enemy[i]->get_finger();
+					}
+				}//生存プレイヤの上げる指を決定
+
+				enemy[j]->dec_sayfinger(sumhand); //予想決定
+
+				resultstate(j, enemy); //結果表示
+
+				if (enemy[j]->get_sayfinger() == sumfinger) {
+					enemy[j]->calc_hand();
 				}
-				break;
-			}//終了条件と最下位の決定
+				else {
+					for (int k = 0;k < Pnum;k++)
+						if (enemy[k]->get_state() == 1) {
+							enemy[k]->pluscalcetable();
+						}
+				}//状態の更新
+
+				if (enemy[j]->get_state() != 0) {
+					enemy[j]->one_state();
+				}//状態戻す
+
+				enemy[j]->calctable(sumhand, sumfinger);//状態の更新
+
+				if (enemy[j]->get_hand() == 0 && enemy[j]->get_rank() == 100) {
+					enemy[j]->victory();
+					enemy[j]->dec_rank(rank);
+					rank++;
+					playernum -= 1;
+				}//状態の更新
+
+				if (playernum == 1) {
+					for (int i = 0;i < Pnum;i++) {
+						if (enemy[i]->get_rank() == 100)
+							enemy[i]->dec_rank(rank);
+					}
+					break;
+				}//終了条件と最下位の決定
+			}
 		}//一周終了
 	}//ゲーム終了
 }
@@ -130,11 +131,11 @@ void gameprogress(baseenemy* enemy[Pnum]) {
 int main()
 {
 	//名前決定
-	std::string name1 = "太郎";
-	std::string name2 = "次郎";
-	std::string name3 = "三郎";
-	std::string name4 = "四郎";
-	std::string name5 = "五郎";
+	std::string name1 = "プレイヤ1";
+	std::string name2 = "プレイヤ2";
+	std::string name3 = "プレイヤ3";
+	std::string name4 = "プレイヤ4";
+	std::string name5 = "プレイヤ5";
 
 	//プレイヤの種類決定
 	player p1(name1);
@@ -161,7 +162,7 @@ int main()
 	std::cout << std::endl;
 
 	for (int i = 0;i < Pnum;i++) {
-		std::cout << enemy[i]->get_name() << "1位回数 " << enemy[i]->get_vicnum() << std::endl;
+		std::cout << enemy[i]->get_name() << " 1位回数 " << enemy[i]->get_vicnum() << std::endl;
 	}//１位回数表示
 
 	std::cout << std::endl;
